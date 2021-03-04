@@ -1,5 +1,6 @@
 package lab2_optional;
-
+/**numele pe care il are sursa*/
+/**capacitatea de produse pe care o poate transporta Sursa catre destinatie*/
 public class Warehouse extends Source{
     @Override
     public String toString() {
@@ -9,9 +10,9 @@ public class Warehouse extends Source{
                         ", supply=" + supply +
                         '}';
     }
-    protected String name; /**numele pe care il are sursa*/
+    protected String name;
     private String type;
-    protected int supply; /**capacitatea de produse pe care o poate transporta Sursa catre destinatie*/
+    protected int supply;
 
     public String getName(){
         return name;
