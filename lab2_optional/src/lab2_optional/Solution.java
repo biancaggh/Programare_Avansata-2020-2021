@@ -1,10 +1,16 @@
 package lab2_optional;
 
 import java.util.Arrays;
+/**numarul de produse de la sursa i la destinatia j*/
+/**costul*/
+/**se calculeaza costul cu ajutorul unitatilor transportate de la surse la destinatii*/
+/**sursa i*/
+/** daca valoarea din matrice!=0 -->atunci inmultim cu costul*/
+/**returneaza nr de costuri obtinute de la sursa i la destinatia j*/
 
 public class Solution extends Problem {
-    private int[][] prod; /**numarul de produse de la sursa i la destinatia j*/
-    private int[][] cost_dest; /**costul*/
+    private int[][] prod;
+    private int[][] cost_dest;
     int cost = 0;
 
     public int[][] getProd() {
@@ -22,15 +28,15 @@ public class Solution extends Problem {
         this.cost_dest=cost_dest;
     }
 
-    public int cost_transport() { /**se calculeaza costul cu ajutorul unitatilor transportate de la surse la destinatii*/
-        for (int i = 0; i < prod.length; i++) /**sursa i*/
-            for (int j = 0; j < prod.length; j++) { /**destinatia j*/
-                if (prod[i][j] != 0) /** daca valoarea din matrice!=0 -->atunci inmultim cu costul*/
+    public int cost_transport() {
+        for (int i = 0; i < prod.length; i++)
+            for (int j = 0; j < prod.length; j++) {
+                if (prod[i][j] != 0)
                 {
                     cost = cost + prod[i][j] * cost_dest[i][j];
                 }
             }
-        return cost; /**returneaza nr de costuri obtinute de la sursa i la destinatia j*/
+        return cost;
     }
 
 }
