@@ -28,7 +28,7 @@ abstract class Source {
 
     protected String name;
     protected String type;
-    protected int supply; /** capacitatea de produse pe care o poate transporta Sursa catre destinatie*/
+    protected int supply;
 
     public String getName(){
         return name;
