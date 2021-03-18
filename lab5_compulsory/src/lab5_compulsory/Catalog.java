@@ -71,7 +71,7 @@ public class Catalog implements Movie, Book{
                 new FileOutputStream(Catalog.getPath()))) {
             oos.writeObject(itemsList);
     }
-   
+
 
 }
 
