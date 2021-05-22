@@ -4,13 +4,15 @@ import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Properties;
 
 public class Database {
-    private Database(String server, String schema, String username, String password) {
+    private Database(String server, String schema, String username, String password, Connection connection) {
         this.server = server;
         this.schema = schema;
         this.username = username;
         this.password = password;
+        this.connection = connection;
 
         Database.databaseList.add(this);
     }
@@ -27,12 +29,21 @@ public class Database {
     private String password;
     public String getPassword() { return this.password; }
 
-    private Connection connection;
+    private static Connection connection;
 
     private static List<Database> databaseList = new ArrayList<>();
 
-    public void initializeConnection() throws SQLException {
-        this.connection = DriverManager.getConnection("jdbc:oracle://" + this.server + (this.schema == null ? "" : ("/" + this.schema)) + "?user=" + this.username + "&password=" + this.password);
+    public Connection initializeConnection() throws SQLException {
+        Connection conn = null;
+        Properties connectionProps = new Properties();
+        connectionProps.put("user", this.username);
+        connectionProps.put("password", this.password);
+
+        conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","STUDENT2","STUDENT2");
+
+
+        //System.out.println("Connected to database");
+        return conn;
     }
 
     public void deinitializeConnection() throws SQLException {
@@ -44,10 +55,13 @@ public class Database {
     }
 
     public Statement getStatement() throws SQLException {
+        connection=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","STUDENT2","STUDENT2");
         return this.connection.createStatement();
     }
 
     public void setAutoCommit(boolean autoCommitValue) throws SQLException {
+        if (connection==null)
+            return;
         this.connection.setAutoCommit(autoCommitValue);
     }
 
@@ -56,7 +70,7 @@ public class Database {
         for (var database: Database.databaseList)
             if (database.server.equals(server) && database.schema.equals(schema) && database.username.equals(username) && database.password.equals(password))
                 return database;
-        return new Database(server, schema, username, password);
+        return new Database(server, schema, username, password, connection);
     }
 
     public static Database getDatabase(String server, String username, String password) {
