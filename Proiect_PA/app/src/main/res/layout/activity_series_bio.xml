@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_silver"
-    tools:context=".SeriesBio">
+    tools:context="tvseries.SeriesBio">
 
     <include layout="@layout/toolbar"/>
 

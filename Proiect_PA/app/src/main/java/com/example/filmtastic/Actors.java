@@ -1,91 +1,124 @@
 package com.example.filmtastic;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
-import com.google.android.gms.auth.api.signin.internal.Storage;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.database.ChildEventListener;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.annotations.NotNull;
+import com.google.gson.JsonArray;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
+import adapters.RecyclerAdapter;
 import models.ActorsModel;
+import movies.MoviesAction;
+import movies.MoviesAnimated;
+import movies.MoviesBio;
+import movies.MoviesComedy;
+import movies.MoviesDoc;
+import movies.MoviesDrama;
+import movies.MoviesFan;
+import movies.MoviesHorror;
+import movies.MoviesRomance;
+import tvseries.SeriesAction;
+import tvseries.SeriesAnimated;
+import tvseries.SeriesBio;
+import tvseries.SeriesComedy;
+import tvseries.SeriesDoc;
+import tvseries.SeriesDrama;
+import tvseries.SeriesFan;
+import tvseries.SeriesHorror;
+import tvseries.SeriesRomance;
 
 
 public class Actors extends AppCompatActivity {
-    ListView listView;
-    TextView textView;
-    ArrayList<ActorsModel> arrayList=new ArrayList<>();
-    DatabaseReference databaseReference;
-    FirebaseDatabase database;
-    ArrayAdapter<ActorsModel> adapter;
+    private final String json_url="filmtastic-dfa82-default-rtdb-ACTORS-export.json";
+    private JsonArrayRequest request;
+    private RequestQueue requestQueue;
+    private List<ActorsModel> actorsModelList;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actors);
-        database=FirebaseDatabase.getInstance();
-        databaseReference=database.getReference("ACTORS");
-        listView = (ListView) findViewById(R.id.ListView);
-        adapter= new ArrayAdapter<ActorsModel>(this, R.layout.actors_model,R.id.anameview,arrayList);
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        actorsModelList=new ArrayList<>();
+        recyclerView=findViewById(R.id.listReycler);
+        jsonRequest();
+    }
+
+    private void jsonRequest() {
+        request= new JsonArrayRequest(json_url, new Response.Listener<JSONArray>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds : snapshot.getChildren()) {
-                    Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
-                    Log.d("TAG",  "vALUE " + map);
+            public void onResponse(JSONArray response) {
+
+                JSONObject jsonObject = null;
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        jsonObject = response.getJSONObject(i);
+                        ActorsModel actorsModel = new ActorsModel();
+                        actorsModel.setName(jsonObject.getString("name"));
+                        actorsModel.setImageURL(jsonObject.getString("image"));
+                        actorsModel.setFullname(jsonObject.getString("full_name"));
+                        actorsModel.setDate_birth(jsonObject.getString("date_birth"));
+                        actorsModel.setAge(jsonObject.getString("Age"));
+                        actorsModel.setNational(jsonObject.getString("nationality"));
+                        actorsModel.setMovies(jsonObject.getString("movies"));
+                        actorsModel.setTvseries(jsonObject.getString("tvseries"));
+
+                        actorsModelList.add(actorsModel);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-                listView.setAdapter(adapter);
+                setuprecyclerview(actorsModelList);
             }
-
+        }, new Response.ErrorListener(){
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onErrorResponse(VolleyError error) {
 
             }
         });
+
+        requestQueue=Volley.newRequestQueue(Actors.this);
+        requestQueue.add(request);
     }
 
 
+        public void setuprecyclerview(List<ActorsModel> actorsModelList) {
+            RecyclerAdapter myAdapter = new RecyclerAdapter(this, actorsModelList);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+            recyclerView.setAdapter(myAdapter);
+        }
 
 
 
@@ -219,5 +252,6 @@ public class Actors extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 
 }

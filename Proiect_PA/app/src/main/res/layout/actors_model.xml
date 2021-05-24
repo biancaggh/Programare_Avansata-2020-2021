@@ -29,6 +29,7 @@
         android:textSize="27.5dp" />
 
     <ImageView
+        android:background="@drawable/loading_shape"
         android:id="@+id/aimg"
         android:layout_width="238dp"
         android:layout_height="179dp"

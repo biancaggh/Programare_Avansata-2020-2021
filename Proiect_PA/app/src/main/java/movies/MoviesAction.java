@@ -1,4 +1,4 @@
-package com.example.filmtastic;
+package movies;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +7,22 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import com.example.filmtastic.Actors;
+import com.example.filmtastic.Directors;
+import com.example.filmtastic.LoginPage;
+import com.example.filmtastic.MainPage;
+import com.example.filmtastic.Profile;
+import com.example.filmtastic.R;
+import tvseries.SeriesAction;
+import tvseries.SeriesAnimated;
+import tvseries.SeriesBio;
+import tvseries.SeriesComedy;
+import tvseries.SeriesDoc;
+import tvseries.SeriesDrama;
+import tvseries.SeriesFan;
+import tvseries.SeriesHorror;
+import tvseries.SeriesRomance;
 
 public class MoviesAction extends AppCompatActivity {
 
@@ -123,27 +139,27 @@ public class MoviesAction extends AppCompatActivity {
             return true;
         }
         else if(id == R.id.item3){
-            Intent intent = new Intent (MoviesAction.this,Actors.class);
+            Intent intent = new Intent (MoviesAction.this, Actors.class);
             startActivity(intent);
             return true;
         }
          else if(id == R.id.item4){
-            Intent intent = new Intent (MoviesAction.this,Directors.class);
+            Intent intent = new Intent (MoviesAction.this, Directors.class);
             startActivity(intent);
             return true;
         }
          else if(id == R.id.item5){
-            Intent intent = new Intent (MoviesAction.this,Profile.class);
+            Intent intent = new Intent (MoviesAction.this, Profile.class);
             startActivity(intent);
             return true;
         }
         else if(id == R.id.item6){
-            Intent intent = new Intent (MoviesAction.this,MainPage.class);
+            Intent intent = new Intent (MoviesAction.this, MainPage.class);
             startActivity(intent);
             return true;
         }
         else if(id == R.id.item7){
-            Intent intent = new Intent (MoviesAction.this,LoginPage.class);
+            Intent intent = new Intent (MoviesAction.this, LoginPage.class);
             startActivity(intent);
             return true;
         }

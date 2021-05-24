@@ -10,6 +10,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import movies.MoviesAction;
+import movies.MoviesAnimated;
+import movies.MoviesBio;
+import movies.MoviesComedy;
+import movies.MoviesDoc;
+import movies.MoviesDrama;
+import movies.MoviesFan;
+import movies.MoviesHorror;
+import movies.MoviesRomance;
+import tvseries.SeriesAction;
+import tvseries.SeriesAnimated;
+import tvseries.SeriesBio;
+import tvseries.SeriesComedy;
+import tvseries.SeriesDoc;
+import tvseries.SeriesDrama;
+import tvseries.SeriesFan;
+import tvseries.SeriesHorror;
+import tvseries.SeriesRomance;
+
 public class Profile extends AppCompatActivity {
     private Button fav;
     @Override

@@ -1,4 +1,4 @@
-package com.example.filmtastic;
+package adapters;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.filmtastic.R;
 
 public class ActorsAdapter extends AppCompatActivity {
     ImageView imageView;

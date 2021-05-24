@@ -1,4 +1,4 @@
-package com.example.filmtastic;
+package movies;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,12 +8,28 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-public class MoviesRomance extends AppCompatActivity {
+import com.example.filmtastic.Actors;
+import com.example.filmtastic.Directors;
+import com.example.filmtastic.LoginPage;
+import com.example.filmtastic.MainPage;
+import com.example.filmtastic.Profile;
+import com.example.filmtastic.R;
+import tvseries.SeriesAction;
+import tvseries.SeriesAnimated;
+import tvseries.SeriesBio;
+import tvseries.SeriesComedy;
+import tvseries.SeriesDoc;
+import tvseries.SeriesDrama;
+import tvseries.SeriesFan;
+import tvseries.SeriesHorror;
+import tvseries.SeriesRomance;
+
+public class MoviesDoc extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movies_romance);
+        setContentView(R.layout.activity_movies_doc);
     }
 
     @Override
@@ -32,118 +48,118 @@ public class MoviesRomance extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
 
         if (id == R.id.item11) {
-            Intent intent = new Intent(MoviesRomance.this, MoviesAction.class);
+            Intent intent = new Intent(MoviesDoc.this, MoviesAction.class);
             startActivity(intent);
             return true;
         }else
         if (id == R.id.item12) {
-            Intent intent = new Intent(MoviesRomance.this, MoviesAnimated.class);
+            Intent intent = new Intent(MoviesDoc.this, MoviesAnimated.class);
             startActivity(intent);
             return true;
         }else if (id == R.id.item13) {
-            Intent intent = new Intent(MoviesRomance.this, MoviesBio.class);
+            Intent intent = new Intent(MoviesDoc.this, MoviesBio.class);
             startActivity(intent);
             return true;
         }else
         if (id == R.id.item14) {
-            Intent intent = new Intent(MoviesRomance.this, MoviesComedy.class);
+            Intent intent = new Intent(MoviesDoc.this, MoviesComedy.class);
             startActivity(intent);
             return true;
         }
         else
         if (id == R.id.item15) {
-            Intent intent = new Intent(MoviesRomance.this, MoviesDoc.class);
+            Intent intent = new Intent(MoviesDoc.this, MoviesDoc.class);
             startActivity(intent);
             return true;
         }else
         if (id == R.id.item16) {
-            Intent intent = new Intent(MoviesRomance.this, MoviesDrama.class);
+            Intent intent = new Intent(MoviesDoc.this, MoviesDrama.class);
             startActivity(intent);
             return true;
         }else if (id == R.id.item17) {
-            Intent intent = new Intent(MoviesRomance.this, MoviesFan.class);
+            Intent intent = new Intent(MoviesDoc.this, MoviesFan.class);
             startActivity(intent);
             return true;
         }else
         if (id == R.id.item18) {
-            Intent intent = new Intent(MoviesRomance.this, MoviesHorror.class);
+            Intent intent = new Intent(MoviesDoc.this, MoviesHorror.class);
             startActivity(intent);
             return true;
         }
         else
         if (id == R.id.item19) {
-            Intent intent = new Intent(MoviesRomance.this, MoviesRomance.class);
+            Intent intent = new Intent(MoviesDoc.this, MoviesRomance.class);
             startActivity(intent);
             return true;
         }
         else
         if (id == R.id.item21) {
-            Intent intent = new Intent(MoviesRomance.this, SeriesAction.class);
+            Intent intent = new Intent(MoviesDoc.this, SeriesAction.class);
             startActivity(intent);
             return true;
         }else
         if (id == R.id.item22) {
-            Intent intent = new Intent(MoviesRomance.this, SeriesAnimated.class);
+            Intent intent = new Intent(MoviesDoc.this, SeriesAnimated.class);
             startActivity(intent);
             return true;
         }else if (id == R.id.item23) {
-            Intent intent = new Intent(MoviesRomance.this, SeriesBio.class);
+            Intent intent = new Intent(MoviesDoc.this, SeriesBio.class);
             startActivity(intent);
             return true;
         }else
         if (id == R.id.item24) {
-            Intent intent = new Intent(MoviesRomance.this, SeriesComedy.class);
+            Intent intent = new Intent(MoviesDoc.this, SeriesComedy.class);
             startActivity(intent);
             return true;
         }
         else
         if (id == R.id.item25) {
-            Intent intent = new Intent(MoviesRomance.this, SeriesDoc.class);
+            Intent intent = new Intent(MoviesDoc.this, SeriesDoc.class);
             startActivity(intent);
             return true;
         }else
         if (id == R.id.item26) {
-            Intent intent = new Intent(MoviesRomance.this, SeriesDrama.class);
+            Intent intent = new Intent(MoviesDoc.this, SeriesDrama.class);
             startActivity(intent);
             return true;
         }else if (id == R.id.item27) {
-            Intent intent = new Intent(MoviesRomance.this, SeriesFan.class);
+            Intent intent = new Intent(MoviesDoc.this, SeriesFan.class);
             startActivity(intent);
             return true;
         }else
         if (id == R.id.item28) {
-            Intent intent = new Intent(MoviesRomance.this, SeriesHorror.class);
+            Intent intent = new Intent(MoviesDoc.this, SeriesHorror.class);
             startActivity(intent);
             return true;
         }
         else
         if (id == R.id.item29) {
-            Intent intent = new Intent(MoviesRomance.this, SeriesRomance.class);
+            Intent intent = new Intent(MoviesDoc.this, SeriesRomance.class);
             startActivity(intent);
             return true;
         }
         else if(id == R.id.item3){
-            Intent intent = new Intent (MoviesRomance.this,Actors.class);
+            Intent intent = new Intent (MoviesDoc.this, Actors.class);
             startActivity(intent);
             return true;
         }
          else if(id == R.id.item4){
-            Intent intent = new Intent (MoviesRomance.this,Directors.class);
+            Intent intent = new Intent (MoviesDoc.this, Directors.class);
             startActivity(intent);
             return true;
         }
          else if(id == R.id.item5){
-            Intent intent = new Intent (MoviesRomance.this,Profile.class);
+            Intent intent = new Intent (MoviesDoc.this, Profile.class);
             startActivity(intent);
             return true;
         }
         else if(id == R.id.item6){
-            Intent intent = new Intent (MoviesRomance.this,MainPage.class);
+            Intent intent = new Intent (MoviesDoc.this, MainPage.class);
             startActivity(intent);
             return true;
         }
         else if(id == R.id.item7){
-            Intent intent = new Intent (MoviesRomance.this,LoginPage.class);
+            Intent intent = new Intent (MoviesDoc.this, LoginPage.class);
             startActivity(intent);
             return true;
         }
