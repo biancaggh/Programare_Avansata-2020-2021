@@ -1,42 +1,44 @@
 package com.example.filmtastic;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.gson.JsonArray;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import adapters.RecyclerAdapter;
+import adapters.ActorsAdapter;
 import models.ActorsModel;
 import movies.MoviesAction;
 import movies.MoviesAnimated;
@@ -47,78 +49,304 @@ import movies.MoviesDrama;
 import movies.MoviesFan;
 import movies.MoviesHorror;
 import movies.MoviesRomance;
-import tvseries.SeriesAction;
-import tvseries.SeriesAnimated;
-import tvseries.SeriesBio;
-import tvseries.SeriesComedy;
-import tvseries.SeriesDoc;
-import tvseries.SeriesDrama;
-import tvseries.SeriesFan;
-import tvseries.SeriesHorror;
-import tvseries.SeriesRomance;
 
 
 public class Actors extends AppCompatActivity {
-    private final String json_url="filmtastic-dfa82-default-rtdb-ACTORS-export.json";
-    private JsonArrayRequest request;
-    private RequestQueue requestQueue;
-    private List<ActorsModel> actorsModelList;
-    private RecyclerView recyclerView;
+   FirebaseFirestore db;
+   RecyclerView recyclerView;
+
+
+   TextView name,name1, name2;
+   TextView fullname,fullname1, fullname2;
+   TextView date_birth, date_birth1,date_birth2;
+   TextView nationality, nationality1,nationality2;
+   TextView movies, movies1,movies2;
+   TextView tvseries,tvseries1,tvseries2;
+   ImageView imageView,imageView1,imageView2;
+   ArrayList<ActorsModel> actorsModelArrayList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_actors);
+        setContentView(R.layout.actors_model);
 
-        actorsModelList=new ArrayList<>();
-        recyclerView=findViewById(R.id.listReycler);
-        jsonRequest();
+
+        db=FirebaseFirestore.getInstance();
+
+        name=findViewById(R.id.anameview);
+        fullname=findViewById(R.id.afullnameview);
+        date_birth=findViewById(R.id.adateview);
+        nationality=findViewById(R.id.anatview);
+        movies=findViewById(R.id.amoviesview);
+        tvseries=findViewById(R.id.atvsview);
+        imageView=findViewById(R.id.aimg);
+
+
+        name1=findViewById(R.id.anameview1);
+        fullname1=findViewById(R.id.afullnameview1);
+        date_birth1=findViewById(R.id.adateview1);
+        nationality1=findViewById(R.id.anatview1);
+        movies1=findViewById(R.id.amoviesview1);
+        tvseries1=findViewById(R.id.atvsview1);
+        imageView1=findViewById(R.id.aimg1);
+
+
+        name2=findViewById(R.id.anameview2);
+        fullname2=findViewById(R.id.afullnameview2);
+        date_birth2=findViewById(R.id.adateview2);
+        nationality2=findViewById(R.id.anatview2);
+        movies2=findViewById(R.id.amoviesview2);
+        tvseries2=findViewById(R.id.atvsview2);
+        imageView2=findViewById(R.id.aimg2);
+
+//        Map<String,Object> actors= new HashMap<>();
+//        actors.put("name","Sebastian Stan");
+//        actors.put("full_name","Sebastian Stan");
+//        actors.put("date_birth","13.08.1982");
+//        actors.put("nationality","Romanian");
+//        actors.put("movies0","Captain America: The Winter Soldier");
+        //actors.put("movies1","Avengers: Infinity War");
+//        actors.put("tvseries0","Once Upon A Time");
+        //actors.put("tvseries1","The Falcon and The Winter Soldier");
+//        actors.put("msize","2");
+//        actors.put("tsize","2");
+//        actors.put("image","https://retetesivedete.ro/wp-content/uploads/2020/12/sebastian-stan-1024x615.jpg");
+//
+//        db.collection("ACTORS").document("3").set(actors).
+//                addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Toast.makeText(Actors.this,"Add new Actor",Toast.LENGTH_LONG).show();
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Log.d("ERROR",e.getMessage());
+//            }
+//        });
+       readActor();
+       showData();
+
+
     }
 
-    private void jsonRequest() {
-        request= new JsonArrayRequest(json_url, new Response.Listener<JSONArray>() {
+    private void showData() {
+        db.collection("ACTORS").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onResponse(JSONArray response) {
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
 
-                JSONObject jsonObject = null;
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        jsonObject = response.getJSONObject(i);
-                        ActorsModel actorsModel = new ActorsModel();
-                        actorsModel.setName(jsonObject.getString("name"));
-                        actorsModel.setImageURL(jsonObject.getString("image"));
-                        actorsModel.setFullname(jsonObject.getString("full_name"));
-                        actorsModel.setDate_birth(jsonObject.getString("date_birth"));
-                        actorsModel.setAge(jsonObject.getString("Age"));
-                        actorsModel.setNational(jsonObject.getString("nationality"));
-                        actorsModel.setMovies(jsonObject.getString("movies"));
-                        actorsModel.setTvseries(jsonObject.getString("tvseries"));
-
-                        actorsModelList.add(actorsModel);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d("TAG", document.getId()+"=>"+document.getData());
                     }
+
+                } else {
+                    Log.d("TAG", "Error getting documents: ", task.getException());
                 }
-                setuprecyclerview(actorsModelList);
             }
-        }, new Response.ErrorListener(){
+        });
+    }
+
+
+    private void readActor() {
+        List<String> list = new ArrayList<>();
+        db.collection("ACTORS").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        list.add(document.getId());
+                    }
+                    Log.d("TAG", list.toString());
+                    System.out.println(list);
+                } else {
+                    Log.d("TAG", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
+            DocumentReference documentReference = db.collection("ACTORS").document("1");
+            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot doc = task.getResult();
+
+                        StringBuilder nume = new StringBuilder("");
+                        nume.append(doc.getString("name"));
+
+                        StringBuilder full = new StringBuilder("");
+                        full.append(doc.getString("full_name"));
+
+                        StringBuilder data = new StringBuilder("");
+                        data.append(doc.getString("date_birth"));
+
+                        StringBuilder nat = new StringBuilder("");
+                        nat.append(doc.getString("nationality"));
+
+
+                        StringBuilder nr = new StringBuilder("");
+
+                        int sizem = Integer.parseInt(String.valueOf(nr.append(doc.getString("msize"))));
+                        int sizet = Integer.parseInt(String.valueOf(nr.append(doc.getString("tsize"))));
+
+
+                        StringBuilder mov = new StringBuilder("");
+
+                        for (int j = 0; j < sizem; ++j) {
+                            mov.append(System.getProperty("line.separator"));
+                            mov.append(doc.get("movies" + j));
+                        }
+
+                        StringBuilder tv = new StringBuilder("");
+
+                        for (int h = 0; h < sizet; ++h) {
+                            tv.append(System.getProperty("line.separator"));
+                            tv.append(doc.get("tvseries" + h));
+                        }
+
+                        StringBuilder img = new StringBuilder();
+                        img.append(doc.getString("image"));
+
+
+                        name.setText(nume.toString());
+                        fullname.setText(full.toString());
+                        date_birth.setText(data.toString());
+                        nationality.setText(nat.toString());
+                        movies.setText(mov.toString());
+                        tvseries.setText(tv.toString());
+
+                        Picasso.get().load(String.valueOf(img)).into(imageView);
+
+
+                    }
+
+                }
+            });
+
+        DocumentReference documentReference1 = db.collection("ACTORS").document("2");
+        documentReference1.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+
+                    StringBuilder nume1 = new StringBuilder("");
+                    nume1.append(doc.getString("name"));
+
+                    StringBuilder full1 = new StringBuilder("");
+                    full1.append(doc.getString("full_name"));
+
+                    StringBuilder data1 = new StringBuilder("");
+                    data1.append(doc.getString("date_birth"));
+
+                    StringBuilder nat1 = new StringBuilder("");
+                    nat1.append(doc.getString("nationality"));
+
+
+                    StringBuilder nr1 = new StringBuilder("");
+
+                    int sizem = Integer.parseInt(String.valueOf(nr1.append(doc.getString("msize"))));
+                    int sizet = Integer.parseInt(String.valueOf(nr1.append(doc.getString("tsize"))));
+
+
+                    StringBuilder mov1 = new StringBuilder("");
+
+                    for (int j = 0; j < sizem; ++j) {
+                        mov1.append(System.getProperty("line.separator"));
+                        mov1.append(doc.get("movies" + j));
+                    }
+
+                    StringBuilder tv1 = new StringBuilder("");
+
+                    for (int h = 0; h < sizet; ++h) {
+                        tv1.append(System.getProperty("line.separator"));
+                        tv1.append(doc.get("tvseries" + h));
+                    }
+
+                    StringBuilder img1 = new StringBuilder();
+                    img1.append(doc.getString("image"));
+
+
+                    name1.setText(nume1.toString());
+                    fullname1.setText(full1.toString());
+                    date_birth1.setText(data1.toString());
+                    nationality1.setText(nat1.toString());
+                    movies1.setText(mov1.toString());
+                    tvseries1.setText(tv1.toString());
+
+                    Picasso.get().load(String.valueOf(img1)).into(imageView1);
+
+
+                }
 
             }
         });
 
-        requestQueue=Volley.newRequestQueue(Actors.this);
-        requestQueue.add(request);
+
+        DocumentReference documentReference2 = db.collection("ACTORS").document("3");
+        documentReference2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+
+                    StringBuilder nume1 = new StringBuilder("");
+                    nume1.append(doc.getString("name"));
+
+                    StringBuilder full1 = new StringBuilder("");
+                    full1.append(doc.getString("full_name"));
+
+                    StringBuilder data1 = new StringBuilder("");
+                    data1.append(doc.getString("date_birth"));
+
+                    StringBuilder nat1 = new StringBuilder("");
+                    nat1.append(doc.getString("nationality"));
+
+
+                    StringBuilder nr1 = new StringBuilder("");
+
+                    int sizem = Integer.parseInt(String.valueOf(nr1.append(doc.getString("msize"))));
+                    int sizet = Integer.parseInt(String.valueOf(nr1.append(doc.getString("tsize"))));
+
+
+                    StringBuilder mov1 = new StringBuilder("");
+
+                    for (int j = 0; j < sizem; ++j) {
+                        mov1.append(System.getProperty("line.separator"));
+                        mov1.append(doc.get("movies" + j));
+                    }
+
+                    StringBuilder tv1 = new StringBuilder("");
+
+                    for (int h = 0; h < sizet; ++h) {
+                        tv1.append(System.getProperty("line.separator"));
+                        tv1.append(doc.get("tvseries" + h));
+                    }
+
+                    StringBuilder img1 = new StringBuilder();
+                    img1.append(doc.getString("image"));
+
+
+                    name2.setText(nume1.toString());
+                    fullname2.setText(full1.toString());
+                    date_birth2.setText(data1.toString());
+                    nationality2.setText(nat1.toString());
+                    movies2.setText(mov1.toString());
+                    tvseries2.setText(tv1.toString());
+
+                    Picasso.get().load(String.valueOf(img1)).into(imageView2);
+
+
+                }
+
+            }
+        });
+
+
     }
-
-
-        public void setuprecyclerview(List<ActorsModel> actorsModelList) {
-            RecyclerAdapter myAdapter = new RecyclerAdapter(this, actorsModelList);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-            recyclerView.setAdapter(myAdapter);
-        }
 
 
 
@@ -128,6 +356,7 @@ public class Actors extends AppCompatActivity {
         inflater.inflate(R.menu.menu, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -178,52 +407,7 @@ public class Actors extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
-        else
-        if (id == R.id.item21) {
-            Intent intent = new Intent(Actors.this, SeriesAction.class);
-            startActivity(intent);
-            return true;
-        }else
-        if (id == R.id.item22) {
-            Intent intent = new Intent(Actors.this, SeriesAnimated.class);
-            startActivity(intent);
-            return true;
-        }else if (id == R.id.item23) {
-            Intent intent = new Intent(Actors.this, SeriesBio.class);
-            startActivity(intent);
-            return true;
-        }else
-        if (id == R.id.item24) {
-            Intent intent = new Intent(Actors.this, SeriesComedy.class);
-            startActivity(intent);
-            return true;
-        }
-        else
-        if (id == R.id.item25) {
-            Intent intent = new Intent(Actors.this, SeriesDoc.class);
-            startActivity(intent);
-            return true;
-        }else
-        if (id == R.id.item26) {
-            Intent intent = new Intent(Actors.this, SeriesDrama.class);
-            startActivity(intent);
-            return true;
-        }else if (id == R.id.item27) {
-            Intent intent = new Intent(Actors.this, SeriesFan.class);
-            startActivity(intent);
-            return true;
-        }else
-        if (id == R.id.item28) {
-            Intent intent = new Intent(Actors.this, SeriesHorror.class);
-            startActivity(intent);
-            return true;
-        }
-        else
-        if (id == R.id.item29) {
-            Intent intent = new Intent(Actors.this, SeriesRomance.class);
-            startActivity(intent);
-            return true;
-        }
+
         else if(id == R.id.item3){
             Intent intent = new Intent (Actors.this,Actors.class);
             startActivity(intent);
@@ -252,6 +436,5 @@ public class Actors extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 
 }
