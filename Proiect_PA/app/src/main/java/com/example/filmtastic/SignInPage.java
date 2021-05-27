@@ -81,7 +81,7 @@ public class SignInPage extends AppCompatActivity {
                 else {
                     CreateAccount(nume,prenume,daten,userID,parola);
                 }
-                openMainPage();
+
             }
         });
 
@@ -111,6 +111,7 @@ public class SignInPage extends AppCompatActivity {
                         if(task.isSuccessful()){
                             showMessage("Account created.");
                             updateUserInfo(nume,prenume,daten,pickedImage,mAuth.getCurrentUser());
+                           // updateUI();
                         }
                         else{
                             showMessage("Account creation failed"+ task.getException().getMessage());
@@ -139,7 +140,7 @@ public class SignInPage extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()){
                                     showMessage("Register Complete");
-                                    updateUI();
+//                                    updateUI();
                                 }
                             }
                         });
@@ -149,11 +150,11 @@ public class SignInPage extends AppCompatActivity {
         });
     }
 
-    private void updateUI() {
-        Intent homeActivity = new Intent(SignInPage.this,MainPage.class);
-        startActivity(homeActivity);
-        finish();
-    }
+//    private void updateUI() {
+//        Intent homeActivity = new Intent(SignInPage.this,MainPage.class);
+//        startActivity(homeActivity);
+//        finish();
+//    }
 
     private void showMessage(String s) {
         Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
@@ -193,10 +194,10 @@ public class SignInPage extends AppCompatActivity {
         }
     }
 
-    public void openMainPage(){
-        Intent intent=new Intent(SignInPage.this,MainPage.class);
-        startActivity(intent);
-    }
+//    public void openMainPage(){
+//        Intent intent=new Intent(SignInPage.this,MainPage.class);
+//        startActivity(intent);
+//    }
 
 
 }
